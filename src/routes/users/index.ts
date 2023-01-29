@@ -1,9 +1,9 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
-import { idParamSchema } from '../../utils/reusedSchemas';
+// import { idParamSchema } from '../../utils/reusedSchemas';
 import {
   createUserBodySchema,
-  changeUserBodySchema,
-  subscribeBodySchema,
+  // changeUserBodySchema,
+  // subscribeBodySchema,
 } from './schemas';
 import type { UserEntity } from '../../utils/DB/entities/DBUsers';
 
@@ -11,7 +11,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
 ): Promise<void> => {
   fastify.get('/', async function (request, reply): Promise<UserEntity[]> {});
-
   fastify.get(
     '/:id',
     {
@@ -21,7 +20,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<UserEntity> {}
   );
-
   fastify.post(
     '/',
     {
@@ -29,9 +27,12 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         body: createUserBodySchema,
       },
     },
-    async function (request, reply): Promise<UserEntity> {}
-  );
+    async function (request, reply): Promise<UserEntity> {
+      const newUser = await fastify.db.users.create(request.body);
 
+      return reply.send(newUser);
+    }
+  );
   fastify.delete(
     '/:id',
     {
@@ -41,7 +42,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<UserEntity> {}
   );
-
   fastify.post(
     '/:id/subscribeTo',
     {
@@ -52,7 +52,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<UserEntity> {}
   );
-
   fastify.post(
     '/:id/unsubscribeFrom',
     {
@@ -63,7 +62,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<UserEntity> {}
   );
-
   fastify.patch(
     '/:id',
     {
