@@ -75,7 +75,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       try {
         return reply.send(postToDelete);
       } catch (error) {
-        return reply.code(400).send({ message: (error as Error).message });
+        return reply.code(400).send({ message: error });
       }
     }
   );
